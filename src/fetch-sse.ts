@@ -6,11 +6,15 @@ import { streamAsyncIterable } from './stream-async-iterable'
 
 export async function fetchSSE(
   url: string,
-  options: Parameters<typeof fetch>[1] & { onMessage: (data: string) => void },
+  options: Parameters<typeof fetch>[1] & {
+    onMessage: (data: string) => void
+    onRawMessage?: (data: any) => void
+  },
   fetch: types.FetchFn = globalFetch
 ) {
-  const { onMessage, ...fetchOptions } = options
+  const { onMessage, onRawMessage, ...fetchOptions } = options
   const res = await fetch(url, fetchOptions)
+
   if (!res.ok) {
     let reason: string
 
@@ -27,6 +31,7 @@ export async function fetchSSE(
     throw error
   }
   const parser = createParser((event) => {
+    onRawMessage?.(event)
     if (event.type === 'event') {
       onMessage(event.data)
     }
@@ -42,16 +47,13 @@ export async function fetchSSE(
     }
 
     body.on('readable', () => {
-      console.log('readable 123:', body.read())
       let chunk: string | Buffer
       while (null !== (chunk = body.read())) {
         parser.feed(chunk.toString())
       }
     })
 
-    body.on('end', () => {
-      console.log('endddddd')
-    })
+    body.on('end', () => {})
   } else {
     for await (const chunk of streamAsyncIterable(res.body)) {
       const str = new TextDecoder().decode(chunk)
