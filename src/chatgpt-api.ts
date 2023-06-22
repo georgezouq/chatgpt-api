@@ -300,7 +300,7 @@ export class ChatGPTAPI {
             }
 
             const response: types.openai.CreateChatCompletionResponse =
-              await res.json()
+              (await res.json()) as any
             if (this._debug) {
               console.log(response)
             }

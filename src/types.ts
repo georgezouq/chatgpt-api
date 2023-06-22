@@ -1,4 +1,5 @@
 import Keyv from 'keyv'
+import { fetch } from 'undici'
 
 export type Role = 'user' | 'assistant' | 'system'
 

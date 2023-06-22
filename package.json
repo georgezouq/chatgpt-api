@@ -45,6 +45,7 @@
     "p-timeout": "^6.1.1",
     "quick-lru": "^6.1.1",
     "read-pkg-up": "^9.1.0",
+    "undici": "^5.22.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

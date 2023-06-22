@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
+import { Agent, fetch, setGlobalDispatcher } from 'undici'
 
-const fetch = globalThis.fetch
+setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }))
 
 export { fetch }

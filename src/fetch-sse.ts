@@ -55,8 +55,8 @@ export async function fetchSSE(
 
     body.on('end', () => {})
   } else {
-    for await (const chunk of streamAsyncIterable(res.body)) {
-      const str = new TextDecoder().decode(chunk)
+    for await (const chunk of streamAsyncIterable(res.body as any)) {
+      const str = new TextDecoder().decode(chunk as any)
       parser.feed(str)
     }
   }
